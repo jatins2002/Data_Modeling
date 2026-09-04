@@ -2,113 +2,108 @@
 
 ## 📌 Project Overview
 
-This project focuses on designing a scalable analytical data model in Power BI using multiple business datasets.
+This project focuses on building a structured and scalable **analytical data model in Microsoft Power BI** using multiple business datasets.
 
-The objective was to transform raw operational data related to sales, customers, products, orders, inventory, marketing campaigns, and targets into a structured model suitable for business intelligence and analytical reporting.
+The goal was to transform operational data related to **sales, customers, products, inventory, marketing campaigns, sales targets, geography, and order processing** into an analytics-ready model for reporting and business intelligence.
 
-The project demonstrates practical understanding of:
+The project helped me understand practical concepts such as:
 
-- Data Modeling
-- Star Schema
 - Fact and Dimension Tables
+- Star Schema
 - Table Relationships
-- Power Query
+- Relationship Cardinality
+- Data Transformation
 - DAX Measures
 - Row-Level Security (RLS)
-- OLTP to OLAP modeling concepts
-- Business Intelligence architecture
+- OLTP vs OLAP concepts
 
 ---
 
-## 🗂️ Source Data
+## 📸 Power BI Data Model
 
-The source dataset contains multiple business entities, including:
+<p align="center">
+  <img src="images/data-model.png" alt="Power BI Data Model" width="1000">
+</p>
 
-- Customers
-- Products
-- Orders (2025 & 2026)
-- Order Line Items
-- Invoices
-- Invoice Lines
-- Payments
-- Shipments
-- Inventory
-- Campaign Logs
-- Campaign Products
-- Sales Targets
-- Cities
-- Regions
-- Customer Contacts
-- Exchange Rates
-- Security/User Mapping
-
-These datasets represent different operational areas of a business and were transformed into an analytical Power BI model.
+The model integrates multiple business processes into a unified analytical structure, allowing dimensions such as **Customer, Product, Date, Geography, Campaign, and Order attributes** to support analysis across different fact tables.
 
 ---
 
-## 🏗️ Data Model
+## 🏗️ Data Model Architecture
 
-The Power BI model contains multiple fact and dimension tables.
+The model contains multiple **fact and dimension tables**.
 
-### Fact Tables
+### 📈 Fact Tables
 
 #### `fact_sales`
-Central transactional sales table used for analyzing:
 
-- Orders
-- Revenue
-- Quantity
-- Discounts
+The central sales fact table used for analyzing:
+
+- Sales transactions
 - Customers
 - Products
-- Geography
+- Quantity
+- Discounts
+- Order information
 
 #### `fact_inventory`
-Stores product inventory information for inventory-level analysis.
+
+Contains product-level inventory information and units available.
 
 #### `fact_campaign_spend`
-Contains marketing campaign performance information such as:
+
+Stores marketing campaign performance data such as:
 
 - Impressions
 - Clicks
 - Spend
 
 #### `fact_promotion`
+
 Connects marketing campaigns with promoted products.
 
 #### `fact_sales_target`
-Contains revenue targets for comparing actual performance against business targets.
+
+Stores sales/revenue targets that can be compared against actual business performance.
 
 #### `fact_order_process`
-Supports order lifecycle and operational analysis using order, invoice, payment, and delivery information.
+
+Contains information related to the order lifecycle, including:
+
+- Order dates
+- Invoice dates
+- Payment dates
+- Delivery dates
+- Order processing duration
 
 ---
 
 ## 📐 Dimension Tables
 
-The model includes reusable dimensions such as:
-
 ### `dim_date`
+
 Calendar dimension used for time-based analysis.
 
-Includes attributes such as:
+Example attributes:
 
 - Date
 - Year
 - Month
 
 ### `dim_customer`
-Contains customer-related attributes including:
+
+Contains descriptive customer information such as:
 
 - Customer
 - Region
-- Account Manager
 - City
+- Account Manager
 - Contact Information
 - Payment Terms
 
 ### `dim_products`
-Contains descriptive product information such as:
+
+Contains product-related information such as:
 
 - Product
 - Brand
@@ -117,13 +112,19 @@ Contains descriptive product information such as:
 - Supplier
 
 ### `dim_geo`
-Provides geographical attributes for location-based analysis.
+
+Provides geographical attributes including:
+
+- City
+- Region
 
 ### `dim_campaign`
-Stores marketing campaign attributes.
+
+Contains marketing campaign information.
 
 ### `dim_order_flag`
-Contains descriptive order characteristics such as:
+
+Contains descriptive order attributes such as:
 
 - Order Channel
 - Priority
@@ -131,140 +132,143 @@ Contains descriptive order characteristics such as:
 
 ---
 
-## 🔗 Relationships
+## 🔗 Table Relationships
 
-The model primarily uses **one-to-many (1:*) relationships** between dimensions and fact tables.
+The analytical model primarily uses **one-to-many (1:*) relationships** between dimension and fact tables.
 
 Example:
 
+```text
 dim_customer
-      |
-      | 1
-      |
-      *
-fact_sales
+     1
+     │
+     │
+     *
+ fact_sales
+```
 
-Similar relationships connect:
+Similarly:
 
-dim_date → fact_sales  
-dim_products → fact_sales  
-dim_geo → fact_sales  
-dim_campaign → fact_campaign_spend  
+```text
+dim_date ────────────→ fact_sales
 
-This approach reduces unnecessary duplication and provides consistent filtering across reports.
+dim_products ────────→ fact_sales
 
----
+dim_geo ─────────────→ fact_sales
 
-## 🔐 Row-Level Security
+dim_campaign ────────→ fact_campaign_spend
+```
 
-The project also includes a security mapping table.
-
-Row-Level Security (RLS) can be used to restrict report data based on the logged-in user's assigned region.
-
-Example:
-
-User
-↓
-Security Mapping
-↓
-Region
-↓
-Customer / Sales
-↓
-Filtered Report
-
-This allows different users to access only the business data relevant to their assigned region.
+This structure allows dimensions to filter transactional data while keeping the analytical model organized.
 
 ---
 
 ## 🧮 DAX Measures
 
-A dedicated Measures table was created to organize business calculations.
+A dedicated measures table was created to keep business calculations organized.
 
-Examples include measures for:
+The model includes measures for metrics such as:
 
 - Total Sales
 - Total Orders
 - Total Customers
 - Total Active Customers
 - Average Order Value
-- Year-over-Year performance
+- Year-over-Year Performance
 
-Keeping measures in a dedicated table improves model organization and maintainability.
+Using a dedicated measures table improves the organization and maintainability of the Power BI model.
+
+---
+
+## 🔐 Row-Level Security (RLS)
+
+The project also contains a **security mapping table**.
+
+This can be used to implement Row-Level Security based on user and region.
+
+Conceptually:
+
+```text
+User
+  ↓
+Security Mapping
+  ↓
+Region
+  ↓
+Customer / Sales
+  ↓
+Filtered Report
+```
+
+This enables users to see only the data associated with their permitted region.
 
 ---
 
 ## 🔄 Data Modeling Workflow
 
-Raw Data
-   ↓
-Power Query
-   ↓
+```text
+Raw Business Data
+        ↓
+    Power Query
+        ↓
 Data Cleaning & Transformation
-   ↓
-Fact / Dimension Identification
-   ↓
+        ↓
+Identify Facts & Dimensions
+        ↓
 Relationship Design
-   ↓
-Star Schema
-   ↓
-DAX Measures
-   ↓
+        ↓
+    Data Model
+        ↓
+   DAX Measures
+        ↓
 Row-Level Security
-   ↓
-Analytical Power BI Model
-   ↓
-Dashboard / Business Analysis
+        ↓
+Analytics / Reporting
+```
 
 ---
 
-## 🧠 Key Concepts Demonstrated
+## 💡 OLTP to OLAP Concept
 
-### OLTP vs OLAP
+The source data represents operational business processes such as:
 
-The raw datasets represent operational business processes such as:
+```text
+Customers
+Orders
+Products
+Invoices
+Payments
+Shipments
+Inventory
+Campaigns
+```
 
-- Orders
-- Payments
-- Shipments
-- Invoices
-- Customers
+These operational datasets were organized into an analytical structure suitable for reporting and business analysis.
 
-These were transformed into an analytical model optimized for reporting and analysis.
+In simple terms:
 
-### Star Schema
-
-The model separates:
-
-**Facts**
-- Numeric business events and measurements
-
-from
-
-**Dimensions**
-- Descriptive business attributes
-
-This makes analytical queries and Power BI filtering easier to manage.
+```text
+Operational Data
+      ↓
+Transformation
+      ↓
+Analytical Model
+      ↓
+Business Analysis
+```
 
 ---
 
 ## 🛠️ Tools & Technologies
 
-- Microsoft Power BI
-- Power Query
-- DAX
-- Excel
-- Data Modeling
-- Star Schema
-- Row-Level Security (RLS)
-
----
-
-## 📸 Data Model
-
-![Power BI Data Model](images/data-model.png)
-
-The model integrates sales, customers, products, geography, marketing, inventory, targets, and order-processing data into a unified analytical structure.
+| Technology | Usage |
+|---|---|
+| Power BI | Data modeling and analytics |
+| Power Query | Data transformation |
+| DAX | Business measures |
+| Excel | Source dataset |
+| Star Schema | Analytical modeling |
+| RLS | Data security |
 
 ---
 
@@ -272,15 +276,33 @@ The model integrates sales, customers, products, geography, marketing, inventory
 
 Through this project, I strengthened my understanding of:
 
-- Designing analytical data models
 - Identifying fact and dimension tables
-- Building star schemas
-- Managing table relationships
+- Designing analytical data models
+- Creating relationships between tables
 - Understanding relationship cardinality
-- Creating reusable dimensions
+- Working with multiple fact tables
+- Building reusable dimensions
 - Organizing DAX measures
 - Implementing Row-Level Security
-- Converting operational data into an analytics-ready model
+- Understanding OLTP and OLAP modeling concepts
+- Preparing data models for business intelligence
+
+---
+
+## 📂 Repository Structure
+
+```text
+power-bi-data-modeling/
+│
+├── README.md
+│
+├── data-modeling.pbix
+│
+├── data_set.xlsx
+│
+└── images/
+    └── data-model.png
+```
 
 ---
 
@@ -288,4 +310,4 @@ Through this project, I strengthened my understanding of:
 
 **Jatindra Kumar Soni**
 
-Aspiring Data Analyst | SQL | Python | Power BI | Excel | Data Modeling
+Data Analyst | SQL | Python | Power BI | Excel | Data Modeling
