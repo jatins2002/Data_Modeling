@@ -22,7 +22,7 @@ The project helped me understand practical concepts such as:
 ## 📸 Power BI Data Model
 
 <p align="center">
-  <img src="images/data-model.png" alt="Power BI Data Model" width="1000">
+  <img src="images/Screenshot 2026-09-05 023955.png" alt="Power BI Data Model" width="1000">
 </p>
 
 The model integrates multiple business processes into a unified analytical structure, allowing dimensions such as **Customer, Product, Date, Geography, Campaign, and Order attributes** to support analysis across different fact tables.
